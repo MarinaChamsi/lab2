@@ -30,6 +30,64 @@ public class SquareDriver {
   public static void moveStraightFor(double distance) {
     // TODO Set motor speeds and rotate them by the given distance.
     // This method should not return until the robot has finished moving.
+    
+    // TODO Set motor speeds and rotate them by the given distance.
+    // This method should not return until the robot has finished moving.
+    
+    
+    //double current_X = current_position[0];
+    //double current_Y = current_position[1];
+    //double current_theta = current_position[2];
+    
+    double distance_parcourue = 0; 
+
+    
+    
+    
+    if (distance > 0) {
+      setSpeed(FORWARD_SPEED);
+
+      while ( distance_parcourue != distance) {
+        double[] current_position = odometer.getXyt();
+
+        double current_X = current_position[0];
+        double current_Y = current_position[1];
+        // double current_theta = current_position[2];
+        
+        
+        distance_parcourue += Math.sqrt(Math.pow(current_Y,2) + Math.pow(current_X,2));
+
+      }
+      stopMotors();
+      
+      
+    }
+    
+    
+    
+    else { // going backward 
+      setSpeed(ROTATE_SPEED);
+      turnBy(180); // rotate in order for the robot to move forward 
+      setSpeed(FORWARD_SPEED);
+      distance = - distance; 
+      while ( distance_parcourue != distance) {
+        double[] current_position = odometer.getXyt();
+
+        double current_X = current_position[0];
+        double current_Y = current_position[1];
+        // double current_theta = current_position[2];
+        
+        
+        distance_parcourue += Math.sqrt(Math.pow(current_Y,2) + Math.pow(current_X,2));
+
+      }
+      stopMotors();
+      
+    }
+      
+      
+    
+  
   }
   
   /**
@@ -42,6 +100,19 @@ public class SquareDriver {
    */
   public static void turnBy(double angle) {
     // TODO Hint: similar to moveStraightFor(), but use a minus sign
+    setSpeed(ROTATE_SPEED);
+
+    // double angle_rotated = 0 ; 
+
+    /*while (angle_rotated!=angle) {
+      double[] current_position = odometer.getXyt();
+
+
+      double current_theta = current_position[2];
+      angle_rotated+=current_theta; */
+
+    leftMotor.rotate(-convertAngle(angle), true);
+    rightMotor.rotate(convertAngle(angle), false);
   }
   
   /**
@@ -52,7 +123,8 @@ public class SquareDriver {
    */
   public static int convertDistance(double distance) {
     // TODO Compute and return the correct value.
-    return 0;
+    int converted_distance = (int) ((180.0 * distance) / (Math.PI * WHEEL_RAD)) ;
+    return converted_distance;
   }
 
   /**
@@ -64,7 +136,8 @@ public class SquareDriver {
    */
   public static int convertAngle(double angle) {
     // TODO Compute and return the correct value. Hint: you can reuse convertDistance()
-    return 0;
+    int converted_angle = convertDistance(angle*Math.PI*BASE_WIDTH /360.0) ;
+    return converted_angle;
   }
   
   /**
@@ -82,6 +155,8 @@ public class SquareDriver {
    */
   public static void setSpeed(int speed) {
     // TODO Implement this by reusing an existing method (1 line)
+    setSpeeds(speed,speed);
+
   }
   
   /**
@@ -92,6 +167,8 @@ public class SquareDriver {
    */
   public static void setSpeeds(int leftSpeed, int rightSpeed) {
     // TODO
+    leftMotor.setSpeed(leftSpeed); //change left motor speed
+    rightMotor.setSpeed(rightSpeed); //change right motor speed
   }
   
   /**
@@ -101,6 +178,8 @@ public class SquareDriver {
    */
   public static void setAcceleration(int acceleration) {
     // TODO
+    leftMotor.setAcceleration(acceleration); // Change the acceleration of left motor
+    rightMotor.setAcceleration(acceleration); // Change the acceleration of right motor
   }
 
 }
